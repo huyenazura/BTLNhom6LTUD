@@ -1,0 +1,531 @@
+﻿create database QL_DIEM_THPT2
+use QL_DIEM_THPT2
+
+
+-- tạo bảng giáo viên
+CREATE TABLE GiaoVien (
+    MaGiaoVien    VARCHAR(10) PRIMARY KEY, 
+    HoTen         VARCHAR(100) NOT NULL, 
+    NgaySinh      DATE NOT NULL, 
+    GioiTinh      VARCHAR(10) CHECK (GioiTinh IN ('Nam', 'Nữ')), 
+    SoDienThoai   VARCHAR(15), 
+    Email         VARCHAR(100) UNIQUE, 
+    DiaChi        TEXT
+);
+
+-- tạo bảng lớp học
+CREATE TABLE LopHoc (
+    MaLop         VARCHAR(10) PRIMARY KEY, 
+    TenLop        VARCHAR(50) NOT NULL, 
+    SiSo          INT DEFAULT 0, 
+    MaGiaoVien    VARCHAR(10), 
+    FOREIGN KEY (MaGiaoVien) REFERENCES GiaoVien(MaGiaoVien) ON DELETE SET NULL
+);
+
+-- tạo bảng học sinh
+CREATE TABLE HocSinh (
+    MaHocSinh     VARCHAR(10) PRIMARY KEY, 
+    HoTen         VARCHAR(100) NOT NULL, 
+    NgaySinh      DATE NOT NULL, 
+    GioiTinh      VARCHAR(10) CHECK (GioiTinh IN ('Nam', 'Nữ')), 
+    DiaChi        TEXT, 
+    SoDienThoai   VARCHAR(15), 
+    MaLop         VARCHAR(10), 
+    FOREIGN KEY (MaLop) REFERENCES LopHoc(MaLop) ON DELETE SET NULL
+);
+
+
+-- tạo bảng môn học
+CREATE TABLE MonHoc (
+    MaMonHoc      VARCHAR(10) PRIMARY KEY, 
+    TenMonHoc     VARCHAR(100) NOT NULL
+);
+
+
+-- tạo bảng học kỳ
+CREATE TABLE NamHoc_HocKy (
+    MaHocKy       VARCHAR(10) PRIMARY KEY, 
+    NamHoc        VARCHAR(10) NOT NULL, 
+    HocKy         INT CHECK (HocKy IN (1, 2))
+);
+
+
+-- tạo bảng điểm
+CREATE TABLE BangDiem (
+    MaBangDiem    INT PRIMARY KEY, 
+    MaHocSinh     VARCHAR(10) NOT NULL, 
+    MaMonHoc      VARCHAR(10) NOT NULL, 
+    MaHocKy       VARCHAR(10) NOT NULL, 
+    DiemMieng     FLOAT CHECK (DiemMieng BETWEEN 0 AND 10), 
+    DiemGiuaKy    FLOAT CHECK (DiemGiuaKy BETWEEN 0 AND 10), 
+    DiemCuoiKy    FLOAT CHECK (DiemCuoiKy BETWEEN 0 AND 10),
+	DiemTrungBinh FLOAT CHECK (DiemTrungBinh BETWEEN 0 AND 10) DEFAULT 0,
+    FOREIGN KEY (MaHocSinh) REFERENCES HocSinh(MaHocSinh) ON DELETE CASCADE,
+    FOREIGN KEY (MaMonHoc) REFERENCES MonHoc(MaMonHoc) ON DELETE CASCADE,
+    FOREIGN KEY (MaHocKy) REFERENCES NamHoc_HocKy(MaHocKy) ON DELETE CASCADE
+);
+
+
+-- tạo bảng phân công giảng dạy
+CREATE TABLE PhanCongGiangDay (
+    MaGiaoVien    VARCHAR(10), 
+    MaMonHoc      VARCHAR(10), 
+    MaLop         VARCHAR(10), 
+    MaHocKy       VARCHAR(10), 
+    PRIMARY KEY (MaGiaoVien, MaMonHoc, MaLop, MaHocKy), 
+    FOREIGN KEY (MaGiaoVien) REFERENCES GiaoVien(MaGiaoVien) ON DELETE CASCADE, 
+    FOREIGN KEY (MaMonHoc) REFERENCES MonHoc(MaMonHoc) ON DELETE CASCADE, 
+    FOREIGN KEY (MaLop) REFERENCES LopHoc(MaLop) ON DELETE CASCADE, 
+    FOREIGN KEY (MaHocKy) REFERENCES NamHoc_HocKy(MaHocKy) ON DELETE CASCADE
+);
+ --DROP TABLE PhanCongGiangDay
+
+
+--tạo bảng hệ thống
+create table HeThong(
+	TenDN char(50) not null primary key,
+	MatKhau char(50),
+	Quyen char(50)
+	);
+
+
+--thêm dữ liệu bảng giáo viên
+INSERT INTO GiaoVien (MaGiaoVien, HoTen, NgaySinh, GioiTinh, SoDienThoai, Email, DiaChi) VALUES
+	('GV001', 'Nguyễn Văn A', '1980-05-12', 'Nam', '0987654321', 'nguyenvana@gmail.com', 'Hà Nội'),
+	('GV002', 'Trần Thị B', '1985-07-20', 'Nữ', '0978456123', 'tranthib@gmail.com', 'Hồ Chí Minh'),
+	('GV003', 'Phạm Văn C', '1979-09-15', 'Nam', '0912345678', 'phamvanc@gmail.com', 'Đà Nẵng'),
+	('GV004', 'Lê Thị D', '1982-11-10', 'Nữ', '0933456789', 'lethid@gmail.com', 'Cần Thơ'),
+	('GV005', 'Hoàng Văn E', '1988-04-25', 'Nam', '0967567890', 'hoangvane@gmail.com', 'Hải Phòng'),
+	('GV006', 'Đặng Thị F', '1990-06-30', 'Nữ', '0909674321', 'dangthif@gmail.com', 'Nghệ An'),
+	('GV007', 'Bùi Văn G', '1983-03-18', 'Nam', '0945671234', 'buivang@gmail.com', 'Bắc Ninh'),
+	('GV008', 'Ngô Thị H', '1987-12-05', 'Nữ', '0924567891', 'ngothih@gmail.com', 'Huế'),
+	('GV009', 'Vũ Văn I', '1977-08-22', 'Nam', '0981324675', 'vuvani@gmail.com', 'Quảng Ninh'),
+	('GV010', 'Mai Thị K', '1992-01-07', 'Nữ', '0915467890', 'maithik@gmail.com', 'Thanh Hóa');
+
+
+
+--thêm dữ liệu bảng lớp học
+INSERT INTO LopHoc (MaLop, TenLop, MaGiaoVien) VALUES
+	('L001', '10A', 'GV001'),
+	('L002', '10B', 'GV002'),
+	('L003', '11A', 'GV003'),
+	('L004', '11B', 'GV004'),
+	('L005', '12A', 'GV005'),
+	('L006', '12B', 'GV006'),
+	('L007', '10C', 'GV007'),
+	('L008', '11C', 'GV008'),
+	('L009', '12C', 'GV009'),
+	('L010', '12D', 'GV010');
+
+
+
+--thêm dữ liệu bảng học sinh
+INSERT INTO HocSinh (MaHocSinh, HoTen, NgaySinh, GioiTinh, DiaChi, SoDienThoai, MaLop) VALUES
+	('HS001', 'Nguyễn Văn Nam', '2008-06-14', 'Nam', 'Hà Nội', '0985123456', 'L001'),
+	('HS002', 'Trần Thị Hoa', '2008-07-22', 'Nữ', 'Hồ Chí Minh', '0974234567', 'L002'),
+	('HS003', 'Phạm Văn An', '2007-08-10', 'Nam', 'Đà Nẵng', '0912345678', 'L003'),
+	('HS004', 'Lê Thị Minh', '2007-09-12', 'Nữ', 'Cần Thơ', '0933456789', 'L001'),
+	('HS005', 'Hoàng Văn Hải', '2006-10-15', 'Nam', 'Hải Phòng', '0967567890', 'L002'),
+	('HS006', 'Đặng Thị Vân', '2006-11-20', 'Nữ', 'Nghệ An', '0909674321', 'L003'),
+	('HS007', 'Bùi Văn Quân', '2008-12-08', 'Nam', 'Bắc Ninh', '0945671234', 'L007'),
+	('HS008', 'Ngô Thị Phương', '2007-01-05', 'Nữ', 'Huế', '0924567891', 'L001'),
+	('HS009', 'Vũ Văn Thành', '2006-02-25', 'Nam', 'Quảng Ninh', '0981324675', 'L002'),
+	('HS010', 'Mai Thị Linh', '2006-03-15', 'Nữ', 'Thanh Hóa', '0915467890', 'L004');
+
+
+--thêm dữ liệu bảng môn học
+INSERT INTO MonHoc (MaMonHoc, TenMonHoc) VALUES
+	('MH001', 'Toán'),
+	('MH002', 'Vật Lý'),
+	('MH003', 'Hóa Học'),
+	('MH004', 'Sinh Học'),
+	('MH005', 'Ngữ Văn'),
+	('MH006', 'Lịch Sử'),
+	('MH007', 'Địa Lý'),
+	('MH008', 'Tiếng Anh'),
+	('MH009', 'Giáo Dục Công Dân'),
+	('MH010', 'Tin Học');
+
+
+
+--thêm dữ liệu bảng học kỳ
+INSERT INTO NamHoc_HocKy (MaHocKy, NamHoc, HocKy) VALUES
+	('HK2024_1', '2024', 1),
+	('HK2024_2', '2024', 2),
+	('HK2023_1', '2023', 1),
+	('HK2023_2', '2023', 2),
+	('HK2022_1', '2022', 1),
+	('HK2022_2', '2022', 2),
+	('HK2021_1', '2021', 1),
+	('HK2021_2', '2021', 2),
+	('HK2020_1', '2020', 1),
+	('HK2020_2', '2020', 2);
+
+
+
+--thêm dữ liệu bảng bảng điểm
+INSERT INTO BangDiem (MaBangDiem, MaHocSinh, MaMonHoc, MaHocKy, DiemMieng, DiemGiuaKy, DiemCuoiKy) VALUES
+	(1, 'HS002', 'MH005', 'HK2024_1', 8, 7.5, 9),
+	(2, 'HS002', 'MH004', 'HK2024_1', 7, 8, 7),
+	(3, 'HS003', 'MH003', 'HK2024_1', 6, 7.5, 6),
+	(4, 'HS004', 'MH002', 'HK2024_1', 9, 9, 8),
+	(5, 'HS005', 'MH001', 'HK2024_1', 5, 6, 7),
+	(6, 'HS006', 'MH010', 'HK2024_1', 8, 8, 9),
+	(7, 'HS007', 'MH009', 'HK2024_1', 6, 5, 7),
+	(8, 'HS008', 'MH008', 'HK2024_1', 9, 9, 9),
+	(9, 'HS009', 'MH007', 'HK2024_1', 7, 7, 7),
+	(10, 'HS010', 'MH006', 'HK2024_1', 6, 7, 8), 
+    (11,'HS001', 'MH001', 'HK2024_1', 8, 9, 9),
+    (12,'HS001', 'MH002', 'HK2024_1', 7, 8, 9),
+    (13,'HS001', 'MH003', 'HK2024_1', 6, 8, 8),
+    (14,'HS001', 'MH004', 'HK2024_1', 9, 9, 8),
+    (15,'HS001', 'MH005', 'HK2024_1', 6, 7, 8),
+    (16,'HS001', 'MH006', 'HK2024_1', 7, 9, 10),
+    (17,'HS001', 'MH007', 'HK2024_1', 8, 6, 7),
+    (18,'HS001', 'MH008', 'HK2024_1', 9, 8, 9),
+    (19,'HS001', 'MH009', 'HK2024_1', 7, 8, 8),
+    (20,'HS001', 'MH010', 'HK2024_1', 8, 9, 9),
+    (21,'HS001', 'MH001', 'HK2024_2', 8, 8, 9),
+    (22,'HS001', 'MH002', 'HK2024_2', 7, 7, 8),
+    (23,'HS001', 'MH003', 'HK2024_2', 6, 6, 9),
+    (24,'HS001', 'MH004', 'HK2024_2', 9, 8, 9),
+    (25,'HS001', 'MH005', 'HK2024_2', 6, 6, 10),
+    (26,'HS001', 'MH006', 'HK2024_2', 7, 8, 8),
+    (27,'HS001', 'MH007', 'HK2024_2', 8, 7, 9),
+    (28,'HS001', 'MH008', 'HK2024_2', 9, 9, 9),
+    (29,'HS001', 'MH009', 'HK2024_2', 7, 10, 8),
+    (30,'HS001', 'MH010', 'HK2024_2', 8, 10, 9),
+	(31,'HS001', 'MH001', 'HK2023_2', 9, 8, 9),
+    (32,'HS001', 'MH002', 'HK2023_2', 8, 7, 8),
+    (33,'HS001', 'MH003', 'HK2023_2', 7, 6, 9),
+    (34,'HS001', 'MH004', 'HK2023_2', 8, 8, 9),
+    (35,'HS001', 'MH005', 'HK2023_2', 8, 6, 10),
+    (36,'HS001', 'MH006', 'HK2023_2', 8, 8, 8),
+    (37,'HS001', 'MH007', 'HK2023_2', 9, 7, 9),
+    (38,'HS001', 'MH008', 'HK2023_2', 10, 9, 9),
+    (39,'HS001', 'MH009', 'HK2023_2', 8, 10, 8),
+    (40,'HS001', 'MH010', 'HK2023_2', 9, 10, 8);
+
+
+--thêm dữ liệu bảng phân công giảng dạy
+INSERT INTO PhanCongGiangDay (MaGiaoVien, MaMonHoc, MaLop, MaHocKy) VALUES
+	('GV001', 'MH001', 'L001', 'HK2024_1'),
+	('GV002', 'MH002', 'L002', 'HK2024_1'),
+	('GV003', 'MH003', 'L003', 'HK2024_1'),
+	('GV004', 'MH004', 'L004', 'HK2024_1'),
+	('GV005', 'MH005', 'L005', 'HK2024_1'),
+	('GV006', 'MH006', 'L006', 'HK2024_1'),
+	('GV007', 'MH007', 'L007', 'HK2024_1'),
+	('GV008', 'MH008', 'L008', 'HK2024_1'),
+	('GV009', 'MH009', 'L009', 'HK2024_1'),
+	('GV010', 'MH010', 'L010', 'HK2024_1'),
+
+	('GV001', 'MH001', 'L001', 'HK2024_2'),
+	('GV002', 'MH002', 'L002', 'HK2024_2'),
+	('GV003', 'MH003', 'L003', 'HK2024_2'),
+	('GV004', 'MH004', 'L004', 'HK2024_2'),
+	('GV005', 'MH005', 'L005', 'HK2024_2'),
+	('GV006', 'MH006', 'L006', 'HK2024_2'),
+	('GV007', 'MH007', 'L007', 'HK2024_2'),
+	('GV008', 'MH008', 'L008', 'HK2024_2'),
+	('GV009', 'MH009', 'L009', 'HK2024_2'),
+	('GV010', 'MH010', 'L010', 'HK2024_2'),
+	
+	('GV001', 'MH001', 'L001', 'HK2023_2'),
+	('GV002', 'MH002', 'L002', 'HK2023_2'),
+	('GV003', 'MH003', 'L003', 'HK2023_2'),
+	('GV004', 'MH004', 'L004', 'HK2023_2'),
+	('GV005', 'MH005', 'L005', 'HK2023_2'),
+	('GV006', 'MH006', 'L006', 'HK2023_2'),
+	('GV007', 'MH007', 'L007', 'HK2023_2'),
+	('GV008', 'MH008', 'L008', 'HK2023_2'),
+	('GV009', 'MH009', 'L009', 'HK2023_2'),
+	('GV010', 'MH010', 'L010', 'HK2023_2');
+
+
+
+--thêm dữ liệu bảng hệ thống
+INSERT INTO HeThong (TenDN, MatKhau, Quyen) VALUES
+	('admin', 'admin123', 'Quản trị viên'),
+	('giaovien1', 'gv123', 'Giáo viên'),
+	('giaovien2', 'gv456', 'Giáo viên'),
+	('hocsinh1', 'hs123', 'Học sinh'),
+	('hocsinh2', 'hs456', 'Học sinh'),
+	('quanly', 'ql123', 'Quản lý');
+
+
+
+select * from GiaoVien
+select * from LopHoc
+select * from HocSinh
+select * from MonHoc
+select * from NamHoc_HocKy
+select * from BangDiem
+select * from PhanCongGiangDay
+select * from HeThong
+
+
+
+-- view thông tin chi tiết học sinh ( sinh viên, lớp học, GVCN)
+CREATE VIEW V_ThongTinChiTietHocSinh AS
+SELECT 
+    HS.MaHocSinh, HS.HoTen AS HoTenHocSinh, HS.NgaySinh, HS.GioiTinh, HS.DiaChi, HS.SoDienThoai,
+    LH.MaLop, LH.TenLop, LH.MaGiaoVien, 
+    GV.HoTen AS GVCN
+FROM HocSinh HS, LopHoc LH, GiaoVien GV
+WHERE HS.MaLop = LH.MaLop AND LH.MaGiaoVien = GV.MaGiaoVien;
+
+SELECT * FROM V_ThongTinChiTietHocSinh
+
+
+
+
+-- view bảng điểm chi tiết ( tên hs, điểm, môn, năm học, giáo viên )
+ALTER VIEW V_BangDiemChiTiet AS
+SELECT DISTINCT
+    BD.MaHocSinh, 
+    HS.HoTen AS TenHocSinh, 
+    HS.MaLop, 
+    BD.MaMonHoc, 
+    MH.TenMonHoc, 
+    BD.MaHocKy, 
+    NH.NamHoc, 
+    NH.HocKy, 
+    BD.DiemMieng, 
+    BD.DiemGiuaKy, 
+    BD.DiemCuoiKy, 
+    BD.DiemTrungBinh,
+
+    -- Chọn một giáo viên duy nhất (giáo viên có vai trò chính)
+    (SELECT TOP 1 PCGD.MaGiaoVien 
+     FROM PhanCongGiangDay PCGD 
+     WHERE PCGD.MaHocKy = BD.MaHocKy 
+       AND PCGD.MaMonHoc = BD.MaMonHoc) AS MaGiaoVien,
+
+    (SELECT TOP 1 GV.HoTen 
+     FROM GiaoVien GV 
+     JOIN PhanCongGiangDay PCGD ON GV.MaGiaoVien = PCGD.MaGiaoVien
+     WHERE PCGD.MaHocKy = BD.MaHocKy 
+       AND PCGD.MaMonHoc = BD.MaMonHoc) AS TenGiaoVien
+
+FROM BangDiem BD
+JOIN HocSinh HS ON BD.MaHocSinh = HS.MaHocSinh
+JOIN MonHoc MH ON BD.MaMonHoc = MH.MaMonHoc
+JOIN NamHoc_HocKy NH ON BD.MaHocKy = NH.MaHocKy;
+
+
+select * from V_BangDiemChiTiet
+--drop view V_BangDiemChiTiet
+
+
+
+
+
+-- procedure thêm học sinh
+CREATE PROCEDURE P_ThemHocSinh(
+     @MaHocSinh VARCHAR(10), 
+     @HoTen VARCHAR(100), 
+     @NgaySinh DATE, 
+     @GioiTinh VARCHAR(10), 
+     @DiaChi TEXT, 
+     @SoDienThoai VARCHAR(15), 
+     @MaLop VARCHAR(10))
+	 AS
+BEGIN
+    INSERT INTO HocSinh (MaHocSinh, HoTen, NgaySinh, GioiTinh, DiaChi, SoDienThoai, MaLop) 
+    VALUES (@MaHocSinh, @HoTen, @NgaySinh, @GioiTinh, @DiaChi, @SoDienThoai, @MaLop);
+END 
+ 
+exec P_ThemHocSinh 'HS011', 'Mai Lan Anh', '2006-03-15', 'Nữ', 'Thanh Hóa', '0915467880', 'L009'
+ 
+
+
+-- procedure tìm học sinh theo lớp
+CREATE PROCEDURE P_TimHocSinhTheoLop @MaLop VARCHAR(10)
+AS
+BEGIN
+    SELECT * FROM V_ThongTinChiTietHocSinh WHERE MaLop = @MaLop;
+END
+
+exec P_TimHocSinhTheoLop 'L003'
+
+
+
+
+-- procedure tìm bảng điểm chi tiết của lớp theo từng môn
+ALTER PROCEDURE P_TimDiemCTLopTheoMon @MaLop VARCHAR(10), @MaMonHoc VARCHAR(10), @NamHoc VARCHAR(10), @HocKy int 
+AS
+BEGIN
+    SELECT * FROM V_BangDiemChiTiet WHERE MaLop = @MaLop and MaMonHoc = @MaMonHoc and NamHoc = @NamHoc and HocKy = @HocKy;
+END
+
+exec P_TimDiemCTLopTheoMon 'L001', 'MH003', '2024', 1
+
+
+
+
+-- procedure tìm bảng điểm theo mã học sinh
+ALTER PROCEDURE P_TimDiemChiTietHocsinh @MaHocSinh VARCHAR(10), @NamHoc VARCHAR(10), @HocKy int 
+AS
+BEGIN
+    SELECT * FROM V_BangDiemChiTiet WHERE MaHocSinh = @MaHocSinh and NamHoc = @NamHoc and HocKy = @HocKy;
+END
+
+exec P_TimDiemChiTietHocsinh 'HS001', '2024', 1
+
+
+
+
+
+ 
+-- trigger cập nhật sĩ số lớp sau thêm học sinh
+CREATE TRIGGER T_CapNhatSiSoSauThemHocSinh ON HocSinh
+AFTER INSERT AS
+BEGIN
+    UPDATE LopHoc 
+    SET SiSo = (SELECT COUNT(*) FROM HocSinh WHERE HocSinh.MaLop = LopHoc.MaLop)
+END
+--drop trigger T_CapNhatSiSoSauThemHocSinh
+
+
+
+-- trigger cập nhật sĩ số lớp sau xóa học sinh
+CREATE TRIGGER T_CapNhatSiSoSauXoaHocSinh ON HocSinh
+AFTER DELETE AS
+BEGIN
+    UPDATE LopHoc 
+    SET SiSo = (SELECT COUNT(*) FROM HocSinh WHERE HocSinh.MaLop = LopHoc.MaLop)
+END
+
+
+
+-- trigger tự động tính điểm trung bình khi thêm điểm
+ALTER TRIGGER T_TinhDiemTrungBinhKhiThem ON BangDiem
+AFTER INSERT AS
+BEGIN
+	UPDATE BangDiem
+    SET DiemTrungBinh = 
+        (SELECT ROUND((DiemMieng + DiemGiuaKy * 2 + DiemCuoiKy * 3) / 6,2) 
+         FROM inserted 
+         WHERE inserted.MaBangDiem = BangDiem.MaBangDiem)
+	WHERE EXISTS (SELECT 1 FROM inserted WHERE inserted.MaBangDiem = BangDiem.MaBangDiem)
+END
+--drop trigger T_TinhDiemTrungBinhKhiThem
+
+
+
+
+-- trigger cập nhật điểm trung bình khi sửa điểm
+ALTER TRIGGER T_TinhDiemTrungBinhKhiSua ON BangDiem
+AFTER UPDATE AS
+BEGIN
+	IF UPDATE(DiemMieng) OR UPDATE(DiemGiuaKy) OR UPDATE(DiemCuoiKy)
+    BEGIN
+        UPDATE BangDiem
+        SET DiemTrungBinh = 
+            (SELECT ROUND((DiemMieng + DiemGiuaKy * 2 + DiemCuoiKy * 3) / 6, 2)
+             FROM inserted 
+             WHERE inserted.MaBangDiem = BangDiem.MaBangDiem)
+        WHERE EXISTS (SELECT 1 FROM inserted WHERE inserted.MaBangDiem = BangDiem.MaBangDiem);
+    END
+END
+
+
+
+
+
+
+-- procedure nhập mã lớp, năm học, kỳ học => xem bảng điểm trung bình cả lớp theo kỳ
+ALTER PROCEDURE P_TaoViewBangDiemTB 
+    @MaLop VARCHAR(10), 
+    @NamHoc VARCHAR(10), 
+    @HocKy INT
+AS
+BEGIN
+    DECLARE @SQL NVARCHAR(MAX)
+    DECLARE @SQL1 NVARCHAR(MAX)
+    DECLARE @ViewName NVARCHAR(100)
+
+    -- Gán giá trị cho @ViewName sau khi khai báo
+    SET @ViewName = CONCAT('V_DiemTrungBinhKy_', @NamHoc, '_', CAST(@HocKy AS NVARCHAR(10)),'_',@MaLop)
+
+    -- Kiểm tra nếu VIEW đã tồn tại thì xóa trước khi tạo mới
+    IF EXISTS (SELECT * FROM sys.views WHERE name = @ViewName)
+    BEGIN
+        SET @SQL = 'DROP VIEW ' + @ViewName
+        EXEC sp_executesql @SQL
+    END
+
+    -- Tạo câu lệnh SQL động
+    SET @SQL = '
+    CREATE VIEW ' + @ViewName + ' AS
+    WITH DiemTrungBinh AS (
+        SELECT 
+            HS.MaHocSinh,
+            HS.HoTen AS TenHocSinh,
+            HS.MaLop,
+            ''' + @NamHoc + ''' AS NamHoc, 
+            ' + CAST(@HocKy AS NVARCHAR(10)) + ' AS HocKy,'
+
+    -- Lặp qua danh sách môn học để tạo cột điểm trung bình động
+    DECLARE @i INT = 1
+    WHILE @i <= 10
+    BEGIN
+        SET @SQL = @SQL + '
+    (SELECT DiemTrungBinh FROM V_BangDiemChiTiet 
+     WHERE MaLop = ''' + @MaLop + ''' 
+     AND V_BangDiemChiTiet.MaHocSinh = HS.MaHocSinh 
+     AND MaMonHoc = ''MH0' + RIGHT('0' + CAST(@i AS NVARCHAR(2)), 2) + ''' 
+     AND NamHoc = ''' + @NamHoc + ''' 
+     AND HocKy = ' + CAST(@HocKy AS NVARCHAR(10)) + ') AS DiemTB_Mon' + CAST(@i AS NVARCHAR(10))
+
+
+        IF @i < 10 
+            SET @SQL = @SQL + ',' -- Thêm dấu phẩy cho các dòng trước dòng cuối cùng
+        
+        SET @i = @i + 1
+    END
+
+    -- Thêm câu lệnh tổng hợp và xếp loại
+    SET @SQL = @SQL + '
+        FROM HocSinh HS
+        WHERE HS.MaLop = ''' + @MaLop + '''
+    )
+    SELECT *, 
+        ROUND((COALESCE(DiemTB_Mon1, 0) + COALESCE(DiemTB_Mon2, 0) + 
+               COALESCE(DiemTB_Mon3, 0) + COALESCE(DiemTB_Mon4, 0) + 
+               COALESCE(DiemTB_Mon5, 0) + COALESCE(DiemTB_Mon6, 0) + 
+               COALESCE(DiemTB_Mon7, 0) + COALESCE(DiemTB_Mon8, 0) + 
+               COALESCE(DiemTB_Mon9, 0) + COALESCE(DiemTB_Mon10, 0)) / 10, 2) AS TB_Ky_' + @NamHoc + '_' + CAST(@HocKy AS NVARCHAR(10)) + ',
+
+        CASE 
+            WHEN ROUND((COALESCE(DiemTB_Mon1, 0) + COALESCE(DiemTB_Mon2, 0) + 
+                        COALESCE(DiemTB_Mon3, 0) + COALESCE(DiemTB_Mon4, 0) + 
+                        COALESCE(DiemTB_Mon5, 0) + COALESCE(DiemTB_Mon6, 0) + 
+                        COALESCE(DiemTB_Mon7, 0) + COALESCE(DiemTB_Mon8, 0) + 
+                        COALESCE(DiemTB_Mon9, 0) + COALESCE(DiemTB_Mon10, 0)) / 10, 2) >= 8.0 THEN ''Giỏi''
+            WHEN ROUND((COALESCE(DiemTB_Mon1, 0) + COALESCE(DiemTB_Mon2, 0) + 
+                        COALESCE(DiemTB_Mon3, 0) + COALESCE(DiemTB_Mon4, 0) + 
+                        COALESCE(DiemTB_Mon5, 0) + COALESCE(DiemTB_Mon6, 0) + 
+                        COALESCE(DiemTB_Mon7, 0) + COALESCE(DiemTB_Mon8, 0) + 
+                        COALESCE(DiemTB_Mon9, 0) + COALESCE(DiemTB_Mon10, 0)) / 10, 2) >= 6.5 THEN ''Khá''
+            WHEN ROUND((COALESCE(DiemTB_Mon1, 0) + COALESCE(DiemTB_Mon2, 0) + 
+                        COALESCE(DiemTB_Mon3, 0) + COALESCE(DiemTB_Mon4, 0) + 
+                        COALESCE(DiemTB_Mon5, 0) + COALESCE(DiemTB_Mon6, 0) + 
+                        COALESCE(DiemTB_Mon7, 0) + COALESCE(DiemTB_Mon8, 0) + 
+                        COALESCE(DiemTB_Mon9, 0) + COALESCE(DiemTB_Mon10, 0)) / 10, 2) >= 5.0 THEN ''Trung bình''
+            ELSE ''Yếu''
+        END AS XepLoai
+    FROM DiemTrungBinh;'
+	
+    -- Thực thi câu lệnh SQL
+    EXEC sp_executesql @SQL
+	IF EXISTS (SELECT * FROM sys.views WHERE name = @ViewName)
+    BEGIN
+        SET @SQL = 'SELECT * FROM ' + @ViewName
+        EXEC sp_executesql @SQL
+    END
+	
+END
+
+EXEC P_TaoViewBangDiemTB 'L001', '2023', 2

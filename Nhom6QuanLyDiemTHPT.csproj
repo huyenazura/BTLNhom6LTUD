@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{84B100B5-4716-43A4-8EDA-02DC5BCBCEA5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Nhom6QuanLyDiemTHPT</RootNamespace>
+    <AssemblyName>Nhom6QuanLyDiemTHPT</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EditScore.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditScore.Designer.cs">
+      <DependentUpon>EditScore.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditStudentInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditStudentInfo.Designer.cs">
+      <DependentUpon>EditStudentInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Home_Teacher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Home_Teacher.Designer.cs">
+      <DependentUpon>Home_Teacher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Ketnoi.cs" />
+    <Compile Include="LogIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LogIn.Designer.cs">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScheduleManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ScheduleManager.Designer.cs">
+      <DependentUpon>ScheduleManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StudentManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StudentManager.Designer.cs">
+      <DependentUpon>StudentManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubjectTeacherForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubjectTeacherForm.Designer.cs">
+      <DependentUpon>SubjectTeacherForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Behavior.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Behavior.Designer.cs">
+      <DependentUpon>TeacherDashboardForm_Behavior.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Overview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Overview.Designer.cs">
+      <DependentUpon>TeacherDashboardForm_Overview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Profile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Profile.Designer.cs">
+      <DependentUpon>TeacherDashboardForm_Profile.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Score.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeacherDashboardForm_Score.Designer.cs">
+      <DependentUpon>TeacherDashboardForm_Score.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TeacherManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TeacherManager.Designer.cs">
+      <DependentUpon>TeacherManager.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="EditScore.resx">
+      <DependentUpon>EditScore.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LogIn.resx">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScheduleManager.resx">
+      <DependentUpon>ScheduleManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StudentManager.resx">
+      <DependentUpon>StudentManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubjectTeacherForm.resx">
+      <DependentUpon>SubjectTeacherForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TeacherManager.resx">
+      <DependentUpon>TeacherManager.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
